@@ -14,14 +14,14 @@ def standardize_id(hid):
 def lambda_handler(event, context):
     bucket_name = os.environ["S3_BUCKET_NAME"]
 
-    # # Get the S3 object key from the event
-    # for record in event['Records']:
-    #     key = record['s3']['object']['key']
+    # Get the S3 object key from the event
+    for record in event['Records']:
+        key = record['s3']['object']['key']
 
-    #     # Ignore files in the processed/ folder
-    #     if key.startswith("processed/"):
-    #         print(f"Ignoring file in processed folder: {key}")
-    #         return {"statusCode": 200, "body": "File ignored."}
+        # Ignore files in the processed/ folder
+        if key.startswith("processed/"):
+            print(f"Ignoring file in processed folder: {key}")
+            return {"statusCode": 200, "body": "File ignored."}
     try:
         # Fetch CSV files from S3
         anxiety_obj = s3.get_object(Bucket=bucket_name, Key="SF_HOMELESS_ANXIETY.csv")
