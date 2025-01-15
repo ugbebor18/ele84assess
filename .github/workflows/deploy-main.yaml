@@ -50,11 +50,29 @@ jobs:
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: terraform apply -auto-approve tfplan
 
-      - name: Upload Updated CSV Files to S3
+
+      - name: Check for Changes in CSV Files
+        id: check_csv_changes
         run: |
-            aws s3 cp ./files/SF_HOMELESS_ANXIETY.csv s3://fridayelement-datasets/
-            aws s3 cp ./files/SF_HOMELESS_DEMOGRAPHICS.csv s3://fridayelement-datasets/
+              git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -qE "files/SF_HOMELESS_ANXIETY.csv|files/SF_HOMELESS_DEMOGRAPHICS.csv" && echo "changed=true" || echo "changed=false" >> $GITHUB_ENV
+
+      - name: Upload Updated CSV Files to S3
+        if: env.changed == 'true'
+        run: |
+              aws s3 cp ./files/SF_HOMELESS_ANXIETY.csv s3://fridayelement-datasets/
+              aws s3 cp ./files/SF_HOMELESS_DEMOGRAPHICS.csv s3://fridayelement-datasets/
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
+
+
+
+    #   - name: Upload Updated CSV Files to S3
+    #     run: |
+    #         aws s3 cp ./files/SF_HOMELESS_ANXIETY.csv s3://fridayelement-datasets/
+    #         aws s3 cp ./files/SF_HOMELESS_DEMOGRAPHICS.csv s3://fridayelement-datasets/
+    #     env:
+    #       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    #       AWS_REGION: ${{ secrets.AWS_REGION }}
