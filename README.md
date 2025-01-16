@@ -9,20 +9,7 @@ This project demonstrates a data processing workflow using AWS services. It auto
 ## Architecture Diagram
 Below is the architecture diagram illustrating the workflow:
 
-```
-+-----------+            +-------------+           +----------------+
-| S3 Bucket |  ------->  | AWS Lambda  |  -------> | Processed Data |
-| (Raw Data)|  Event     | (Merge CSV) |  Process  |    in S3       |
-+-----------+            +-------------+           +----------------+ 
-                                                            |
-                                                            v
-                                    +.........................................................       
-                                    |                                                         |
-                             +-----------------+                                   +-----------------+
-                             | Visualization   |                                   |  Query          |
-                             | AWS QuickSight  |                                   |  AWS Athena     |
-                             +-----------------+                                   +.................+
-```
+![alt text](<Architecture image.jpg>)
 
 ---
 
